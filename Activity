@@ -1,0 +1,17 @@
+一：生命周期
+（1）.onCreate()：创建Activity时候调用。
+（2）.onRestart()：重新启动Activity调用.
+（3）.onStart()：Activity变为在屏幕上对用户可见。
+（4）.onResume：Activity开始与用户进行交互时调用。
+（5）.onPause：Activity被暂停。该方法是用来保存活动状态的地方，以便Activity被重新启动时具有与其退出相同的状态。如果被重新吊起从onRestart()开始
+（6）.onStop：Activity被停止并转换为不可见状态。
+（7）.onDestroy：Activity被完全从系统内存中移除。
+二：Activity的四种启动模式
+（1）standard 启动模式
+Activity 默认的启动模式，模式下，每次 startActivity 都会在栈顶创建一个新的实例，在同一个任务中可以存在多个Activity 的实例。
+（2）singleTop 启动模式
+栈顶复用，要启动 singleTop 模式的 Activity，如果它恰好在当前栈顶，那么直接复用，执行其 onNewIntent 方法。否则，就重新创建一个实例入栈。
+（3）singleTask 启动模式
+栈内复用，在系统中只有一个实例，当再次启动该 Activity 时，会重用已存在的任务和实例，并且会调用这个实例的 onNewIntent()方法，将 Intent 实例传递到该实例中。
+（4）singleInstance 启动模式
+总是在新的任务中开启，并且这个新的任务中有且只有这一个实例，当再次启动该 Activity 的实例时，会重用已存在的任务和实例。并且会调用这个实例的onNewIntent()方法，将 Intent 实例传递到该实例中。

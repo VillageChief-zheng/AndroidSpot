@@ -1,0 +1,28 @@
+#一：Service
+（1）service的启动模式和默认运行线程
+  Service是运行在主线程当中的，所以如果需要执行一些复杂的逻辑操作，最好在服务的内部手动创建子线程进行处理，否则会出现UI线程被阻塞的问题
+	#started
+	其它组件调用 startService() 启动一个 Service。一旦启动，Service 将一直运行在后台，即使启动这个 Service 的组件已经被销毁。通常一个被 start 的 Service 会在后台执行单独的操作，也并不需要给启动它的组件返回结果。只有当 Service 自己调用 stopSelf() 或者其它组件调用 stopService() 才会终止。
+  #bind
+   其它组件可以调用 bindService() 来绑定一个 Service。这种方式会让 Service 和启动它的组件绑定在一起，当启动它的组件销毁的时候，Service 也会自动进行 unBind 操作。同一个 Service 可以被多个组件绑定，只有所有绑定它的组件都进行了 unBind 操作，这个 Service 才会被销毁。
+（2）service和activity交互
+  方法一：
+    1. 添加一个继承Binder的内部类，并添加相应的逻辑方法
+    2. 重写Service的onBind方法，返回我们刚刚定义的那个内部类实例
+    3. 重写ServiceConnection，onServiceConnected时调用逻辑方法 绑定服务
+   方法二
+   通过接口Iservice调用Service方法，使用接口调用service和直接调用其实本质都是一样的，只不过多了接口一个步骤
+（3） IntentService与Service的区别（intentservice的优点）
+ IntentService是Service的子类，是一个异步的，会自动停止的服务，很好解决了传统的Service中处理完耗时操作忘记停止并销毁Service的问题
+* 会创建独立的worker线程来处理所有的Intent请求；
+* 会创建独立的worker线程来处理onHandleIntent()方法实现的代码，无需处理多线程问题；
+* 所有请求处理完成后，IntentService会自动停止，无需调用stopSelf()方法停止Service；
+* 为Service的onBind()提供默认实现，返回null；
+* 为Service的onStartCommand提供默认实现，将请求Intent添加到队列中；
+* IntentService不会阻塞UI线程，而普通Serveice会导致ANR异常
+* Intentservice若未执行完成上一次的任务，将不会新开一个线程，是等待之前的任务完成后，再执行新的任务，等任务完成后再次调用stopSelf()
+（4）service生命周期
+  onCreate（）-onStartCommand（）（startService）---->onDestroy()
+	           -onBind（） (bindService)-->unbind()
+
+   
